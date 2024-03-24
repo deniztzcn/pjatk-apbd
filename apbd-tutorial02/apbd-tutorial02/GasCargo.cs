@@ -8,5 +8,6 @@ public class GasCargo: Cargo
         : base(name, weight)
     {
         Pressure = pressure;
+        IsHazardous = true;
     }
 }

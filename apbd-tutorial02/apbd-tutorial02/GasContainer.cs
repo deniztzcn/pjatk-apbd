@@ -1,8 +1,8 @@
 namespace apbd_tutorial02;
 
-public class GasC : Container,IHazardNotifier
+public class GasContainer : Container,IHazardNotifier
 {
-    public GasC(double height, double tareWeight, double depth, double maxKg, string containerType)
+    public GasContainer(double height, double tareWeight, double depth, double maxKg)
         :base(height,tareWeight,depth,maxKg,"G"){}
 
     public override void EmptyTheCargo()
@@ -20,12 +20,23 @@ public class GasC : Container,IHazardNotifier
         }
         else
         {
-            throw new OverFillException("Exceeds the capacity of " + SerialNumber);
+            throw new OverFillException(cargo + " exceeds the capacity of " + SerialNumber);
         }
     }
 
     public void HazardousSituation(string message)
     {
         Console.WriteLine("WARNING! Hazardous situation on " + SerialNumber);
+    }
+
+    public double TotalPressure()
+    {
+        double result = 0.0;
+        foreach (Cargo c in ListOfCargos)
+        {
+            result += ((GasCargo)c).Pressure;
+        }
+
+        return result;
     }
 }

@@ -14,6 +14,7 @@ public abstract class Container
     public int Id { get; set; }
     public string SerialNumber { get; set; }
     public List<Cargo> ListOfCargos { get; }
+    public Ship carrier { get; set; }
 
     public Container(double height, double tareWeight, double depth, double maxKg, string containerType)
     {
@@ -31,4 +32,8 @@ public abstract class Container
 
     public abstract void LoadCargo(Cargo cargo);
 
+    public override string ToString()
+    {
+        return SerialNumber + "[" + MassKg + "/" + MaxKg + "]";
+    }
 }

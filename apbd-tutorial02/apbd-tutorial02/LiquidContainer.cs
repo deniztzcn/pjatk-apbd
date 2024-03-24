@@ -1,10 +1,10 @@
 namespace apbd_tutorial02;
 
-public class LiquidC: Container,IHazardNotifier
+public class LiquidContainer: Container,IHazardNotifier
 {
     public bool IncludeHazardous { get; set; }
 
-    public LiquidC(double height, double tareWeight, double depth, double maxKg)
+    public LiquidContainer(double height, double tareWeight, double depth, double maxKg)
     :base(height,tareWeight,depth,maxKg,"L") {}
     
     
@@ -15,7 +15,7 @@ public class LiquidC: Container,IHazardNotifier
 
     public override void LoadCargo(Cargo cargo)
     {
-        if (cargo is HazardousCargo)
+        if (cargo.IsHazardous)
         {
             if (MassKg + cargo.Weight <= MaxKg * 0.5)
             {
