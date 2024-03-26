@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace apbd_tutorial02;
 
@@ -24,7 +25,7 @@ public abstract class Container
         MaxKg = maxKg;
         Id = _counter++;
         ContainerType = containerType;
-        SerialNumber = "KON-" + ContainerType + Id;
+        SerialNumber = "KON-" + ContainerType + "-"+ Id;
         ListOfCargos = new List<Cargo>();
     }
 
@@ -34,6 +35,22 @@ public abstract class Container
 
     public override string ToString()
     {
-        return SerialNumber + "[" + MassKg + "/" + MaxKg + "]";
+        StringBuilder cargoString = new StringBuilder();
+        foreach (var cargo in ListOfCargos)
+        {
+            cargoString.Append(cargo).Append(", ");
+        }
+
+        string cargoListString = cargoString.ToString().TrimEnd(' ', ',');
+
+        if (carrier == null)
+        {
+            return $"{SerialNumber} [{cargoListString} | {MassKg}/{MaxKg} kg] not in any ship.";    
+        }
+        else
+        {
+            return $"{SerialNumber} [{cargoListString} | {MassKg}/{MaxKg} kg] in ship {carrier.Id}.";
+        } 
+        
     }
 }

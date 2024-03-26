@@ -88,12 +88,13 @@ public class Ship
         return result;
     }
 
-    public void RemoveContainerById(int id)
+    public void RemoveContainerBySerialNumber(string serialNumber)
     {
         for (int i = 0; i < ListOfContainers.Count; i++)
         {
-            if (ListOfContainers[i].Id == id)
+            if (ListOfContainers[i].SerialNumber.Equals(serialNumber,StringComparison.OrdinalIgnoreCase))
             {
+                GetContainerBySerialNumber(serialNumber).carrier = null;
                 ListOfContainers.RemoveAt(i);
                 break;
             }
@@ -121,4 +122,5 @@ public class Ship
                "(speed=" + MaxSpeed + ", maxContainerNum=" + MaxNumberOfContainers +
                ", maxWeight=" + MaxWeight + ")";
     }
+    
 }

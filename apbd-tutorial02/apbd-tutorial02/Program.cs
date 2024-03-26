@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Data;
 using System.Threading.Channels;
 using apbd_tutorial02;
 
@@ -10,6 +11,8 @@ class Program
     {
         Containers = new List<Container>();
         Ships = new List<Ship>();
+        
+        Menu();
 
     }
 
@@ -17,14 +20,28 @@ class Program
     {
         while (true)
         {
+            Console.WriteLine("List of container ships: ");
+            Ships.ForEach(s => Console.WriteLine(s));
+            
+            Console.WriteLine("List of containers: ");
+            Containers.ForEach(c => Console.WriteLine(c));
             Console.WriteLine("1- Create a container\n" +
                               "2- Load a cargo to a container\n" +
                               "3- Create a ship\n" +
                               "4- Load a container to a ship\n" +
                               "5- Load a list of containers to a ship\n" +
                               "6- Remove a container from a ship\n" +
-                              "7- Unload a container");
+                              "7- Unload a container\n" +
+                              "8- Transfer containers between ships\n" +
+                              "9- Replace container with another one\n" +
+                              "10- Get information about a container\n" +
+                              "11- Get information about a ship\n" +
+                              "12- List of containers for a ship\n" +
+                              "13- Increase the speed for a ship\n" +
+                              "14- Decrease the speed for a ship\n" +
+                              "anything else to quit.");
 
+            Console.Write("-> ");
             string command = Console.ReadLine();
 
             switch (command)
@@ -87,6 +104,123 @@ class Program
                     }
 
                     break;
+                case "8":
+                    try
+                    {
+                        ReplaceContainerWith();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    
+                    break;
+                case "9":
+                    
+                    try
+                    {
+                        TransferContainerBetweenShips();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    
+                    break;
+                case "10":
+                    Console.Write("Container serial number: ");
+                    string serialNumber = Console.ReadLine();
+                    try
+                    {
+                        Container tempContainer = GetContainerBySerialNumber(serialNumber);
+                        Console.WriteLine(tempContainer);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    break;
+                case "11":
+                {
+                    try
+                    {
+                        int id = GetValidIntInput("Ship ID: ");
+                        Ship tempShip = Ships.FirstOrDefault(s => id == s.Id);
+                        Console.WriteLine(tempShip);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    
+                    break;
+                }
+                case "12":
+                {
+                    try
+                    {
+                        int id = GetValidIntInput("Ship ID: ");
+                        Ship tempShip = Ships.FirstOrDefault(s => id == s.Id);
+
+                        foreach (Container c in tempShip.ListOfContainers)
+                        {
+                            Console.WriteLine(c);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    
+                    break;
+                }
+                case "13":
+                {
+                    try
+                    {
+                        int id = GetValidIntInput("Ship ID: ");
+                        Ship tempShip = Ships.FirstOrDefault(s => id == s.Id);
+                        double speed = GetValidDoubleInput("Speed to increaase: ");
+                        if (speed + tempShip.CurrentSpeed <= tempShip.MaxSpeed)
+                        {
+                            Console.WriteLine("The speed is increased");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ERROR! The Max limit is exceeded");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    
+                    break;
+                }
+                case "14":
+                {
+                    try
+                    {
+                        int id = GetValidIntInput("Ship ID: ");
+                        Ship tempShip = Ships.FirstOrDefault(s => id == s.Id);
+                        double speed = GetValidDoubleInput("Speed to decrease: ");
+                        if (speed - tempShip.CurrentSpeed > 0)
+                        {
+                            Console.WriteLine("The speed is decreased");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ERROR! The speed cant be negative");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.StackTrace);
+                    }
+                    break;
+                }
+                default:
+                    return;
             }
         }
     }
@@ -165,7 +299,11 @@ class Program
     private static void LoadCargoToContainer()
     {
         Console.WriteLine("Please choose a container by a serial number to load.");
-        Console.WriteLine(Containers);
+        foreach (Container c in Containers)
+        {
+            Console.WriteLine(c);    
+        }
+        
         Console.Write("Serial number: ");
         string serialNumber = Console.ReadLine();
         Container temp = GetContainerBySerialNumber(serialNumber);
@@ -313,7 +451,7 @@ class Program
         Ship tempShip = FindShipById(shipId);
         
         
-        Console.Write("Please provide serial numbers of the containers (press enter to stop): ");
+        Console.Write("Please provide serial numbers of the 1 (press enter to stop): ");
         List<Container> tempList = new List<Container>();
         while (true)
         {
@@ -333,11 +471,9 @@ class Program
     {
         int id = GetValidIntInput("Ship ID: ");
         Ship temp = Ships.FirstOrDefault(s => s.Id == id);
-        if (Ships.Remove(temp))
-        {
-            
-            Console.WriteLine($"The ship with ID {id} is removed.");
-        }
+        Console.Write("Container serial number: ");
+        string serialNumber = Console.ReadLine();
+        temp.RemoveContainerBySerialNumber(serialNumber);
     }
 
     private static void UnloadContainer()
@@ -347,5 +483,42 @@ class Program
         Container tempContainer = GetContainerBySerialNumber(serialNumber);
         tempContainer.EmptyTheCargo();
         tempContainer.carrier.GetContainerBySerialNumber(serialNumber).EmptyTheCargo();
+    }
+
+    private static void ReplaceContainerWith()
+    {
+        int id = GetValidIntInput("Ship ID: ");
+        Ship temp = Ships.FirstOrDefault(s => s.Id == id);
+        Console.Write("Container serial number which you want to replace: ");
+        string serialNumber = Console.ReadLine();
+        Container container = GetContainerBySerialNumber(serialNumber);
+        temp.RemoveContainerBySerialNumber(serialNumber);
+        
+        Console.Write("Container serial number which you want to add: ");
+        string serialNumber2 = Console.ReadLine();
+        Container container2 = GetContainerBySerialNumber(serialNumber2);
+        temp.addContainer(container2);
+        
+    }
+
+    private static void TransferContainerBetweenShips()
+    {
+        int id1 = GetValidIntInput("Ship ID: ");
+        Ship ship1 = Ships.FirstOrDefault(s => s.Id == id1);
+        Console.Write("Container serial ID: ");
+        string serialNumber1 = Console.ReadLine();
+        Container container1 = GetContainerBySerialNumber(serialNumber1);
+        
+        int id2 = GetValidIntInput("Ship ID: ");
+        Ship ship2 = Ships.FirstOrDefault(s => s.Id == id2);
+        Console.Write("Container serial ID: ");
+        string serialNumber2 = Console.ReadLine();
+        Container container2 = GetContainerBySerialNumber(serialNumber2);
+        
+        ship1.addContainer(container2);
+        ship2.addContainer(container1);
+        ship1.RemoveContainerBySerialNumber(serialNumber1);
+        ship2.RemoveContainerBySerialNumber(serialNumber2);
+
     }
 }
