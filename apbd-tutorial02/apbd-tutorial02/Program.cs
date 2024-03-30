@@ -406,10 +406,7 @@ class Program
         double tareWeight = GetValidDoubleInput("Weight: ");
         double depth = GetValidDoubleInput("Depth: ");
         double maxKg = GetValidDoubleInput("Max Kg: ");
-        Console.Write("Type of product: ");
-        string typeOfProduct = Console.ReadLine();
-        double temperature = GetValidDoubleInput("Temperature: ");
-        RefrigeratedContainer rc = new RefrigeratedContainer(height, tareWeight, depth, maxKg,typeOfProduct,temperature);
+        RefrigeratedContainer rc = new RefrigeratedContainer(height, tareWeight, depth, maxKg);
         Containers.Add(rc);
     }
 

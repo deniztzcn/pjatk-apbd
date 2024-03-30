@@ -7,16 +7,17 @@ public class GasContainer : Container,IHazardNotifier
 
     public override void EmptyTheCargo()
     {
+        Cargo = null;
         MassKg = MassKg * 0.95;
         
     }
 
     public override void LoadCargo(Cargo cargo)
     {
-        if (MassKg + cargo.Weight <= MaxKg)
+        if (cargo.Weight <= MaxKg)
         {
-            ListOfCargos.Add(cargo);
-            MassKg += cargo.Weight;
+            Cargo = cargo;
+            MassKg = cargo.Weight;
         }
         else
         {
@@ -29,14 +30,8 @@ public class GasContainer : Container,IHazardNotifier
         Console.WriteLine("WARNING! Hazardous situation on " + SerialNumber);
     }
 
-    public double TotalPressure()
+    public double Pressure()
     {
-        double result = 0.0;
-        foreach (Cargo c in ListOfCargos)
-        {
-            result += ((GasCargo)c).Pressure;
-        }
-
-        return result;
+        return ((GasCargo)Cargo).Pressure;
     }
 }

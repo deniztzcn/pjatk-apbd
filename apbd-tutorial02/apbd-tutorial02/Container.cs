@@ -14,8 +14,8 @@ public abstract class Container
     private static int _counter = 1;
     public int Id { get; set; }
     public string SerialNumber { get; set; }
-    public List<Cargo> ListOfCargos { get; }
     public Ship carrier { get; set; }
+    public Cargo Cargo { get; set; }
 
     public Container(double height, double tareWeight, double depth, double maxKg, string containerType)
     {
@@ -26,7 +26,6 @@ public abstract class Container
         Id = _counter++;
         ContainerType = containerType;
         SerialNumber = "KON-" + ContainerType + "-"+ Id;
-        ListOfCargos = new List<Cargo>();
     }
 
     public abstract void EmptyTheCargo();
@@ -36,20 +35,14 @@ public abstract class Container
     public override string ToString()
     {
         StringBuilder cargoString = new StringBuilder();
-        foreach (var cargo in ListOfCargos)
-        {
-            cargoString.Append(cargo).Append(", ");
-        }
-
-        string cargoListString = cargoString.ToString().TrimEnd(' ', ',');
 
         if (carrier == null)
         {
-            return $"{SerialNumber} [{cargoListString} | {MassKg}/{MaxKg} kg] not in any ship.";    
+            return $"{SerialNumber} [{Cargo} | {MassKg}/{MaxKg} kg] not in any ship.";    
         }
         else
         {
-            return $"{SerialNumber} [{cargoListString} | {MassKg}/{MaxKg} kg] in ship {carrier.Id}.";
+            return $"{SerialNumber} [{Cargo} | {MassKg}/{MaxKg} kg] in ship {carrier.Id}.";
         } 
         
     }

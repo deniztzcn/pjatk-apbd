@@ -17,10 +17,10 @@ public class LiquidContainer: Container,IHazardNotifier
     {
         if (cargo.IsHazardous)
         {
-            if (MassKg + cargo.Weight <= MaxKg * 0.5)
+            if (cargo.Weight <= MaxKg * 0.5)
             {
-                ListOfCargos.Add(cargo);
-                MassKg += cargo.Weight;
+                Cargo = cargo;
+                MassKg = cargo.Weight;
                 IncludeHazardous = true;
             }
             else
@@ -30,10 +30,10 @@ public class LiquidContainer: Container,IHazardNotifier
         }
         else
         {
-            if (MassKg + cargo.Weight <= MaxKg * 0.9)
+            if (cargo.Weight <= MaxKg * 0.9)
             {
-                ListOfCargos.Add(cargo);
-                MassKg += cargo.Weight;
+                Cargo = cargo;
+                MassKg = cargo.Weight;
             }
             else
             {
@@ -44,7 +44,7 @@ public class LiquidContainer: Container,IHazardNotifier
 
     public override void EmptyTheCargo()
     {
-        ListOfCargos.Clear();
+        Cargo = null;
         MassKg = 0.0;
         IncludeHazardous = false;
     }
