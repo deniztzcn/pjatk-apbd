@@ -10,7 +10,7 @@ public class Animal
     public string Name { get; set; }
     [MaxLength(200)]
     public string Description { get; set; }
-    [Required]
+    [Required]  
     [MaxLength(200)]
     public string Category { get; set; }
     [Required]
