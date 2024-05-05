@@ -49,12 +49,26 @@ public class WarehouseController: ControllerBase
             return BadRequest("The order is already completed.");
         }
 
-        var isIdOrderExistInProductWarehouse = await _warehouseService.IsIdOrderExistInProductWarehouse(warehouseDto);
-        if (isIdOrderExistInProductWarehouse)
+        var idRecord = await _warehouseService.UpdateAndInsert(warehouseDto);
+
+        if (idRecord != -1)
         {
-            return BadRequest("The order ID exists in Product_Warehouse table.");
+            return Ok(new {IdProductWarehouse = idRecord});
         }
 
+        return BadRequest("An error occured during insertion.");
 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> addProductWarehouseProcedure(WarehouseDTO warehouseDto)
+    {
+        int idRecord = await _warehouseService.UpdateAndInsert(warehouseDto);
+        if (idRecord != -1)
+        {
+            return Ok(new { IdProductWarehouse = idRecord });
+        }
+
+        return BadRequest("An error occured during insertion.");
     }
 }

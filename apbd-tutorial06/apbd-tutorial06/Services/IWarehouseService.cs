@@ -8,6 +8,7 @@ public interface IWarehouseService
     public Task<bool> IsWarehouseExists(int idWarehouse);
     public Task<bool> IsOrderExists(WarehouseDTO warehouseDto);
     public Task<bool> IsOrderCompleted(WarehouseDTO warehouseDto);
-    public Task<bool> IsIdOrderExistInProductWarehouse(WarehouseDTO warehouseDto);
+    public Task<int> UpdateAndInsert(WarehouseDTO warehouseDtO);
+    public Task<int> InsertProductProcedure(WarehouseDTO warehouseDto);
 
 }

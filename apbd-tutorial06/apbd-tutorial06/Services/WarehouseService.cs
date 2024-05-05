@@ -37,17 +37,32 @@ public class WarehouseService: IWarehouseService
         return order != null;
     }
 
+
     public async Task<bool> IsOrderCompleted(WarehouseDTO warehouseDto)
     {
         var order = await _orderRepository.GetOrder(warehouseDto);
-        return order?.FulfilledAt != null;
+        var idOrder = order.IdOrder;
+        return await _productWarehouseRepository.IsOrderExist(idOrder);
+
     }
 
-    public async Task<bool> IsIdOrderExistInProductWarehouse(WarehouseDTO warehouseDto)
+    public async Task<int> UpdateAndInsert(WarehouseDTO warehouseDto)
     {
         var order = await _orderRepository.GetOrder(warehouseDto);
-        var idOrder = order.IdOrder;
-        return await _productWarehouseRepository.IsIdOrderExist(idOrder);
+        var isUpdated = await _orderRepository.UpdateRecord(warehouseDto);
+        var product = await _productRepository.GetProduct(warehouseDto.IdProduct);
+        
+        if (isUpdated)
+        {
+            return await _productWarehouseRepository.InsertProduct(warehouseDto,product.Price,order.IdOrder);
+        }
 
+        return -1;
+    }
+
+    public async Task<int> InsertProductProcedure(WarehouseDTO warehouseDto)
+    {
+        int id = await _productWarehouseRepository.InsertProductProcedure(warehouseDto);
+        return id;
     }
 }
