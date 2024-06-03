@@ -56,7 +56,7 @@ public class TripRepository: ITripRepository
     {
         var client = await _apbd08Context.Clients.FirstOrDefaultAsync(c => c.Pesel.Equals(assignClientDto.Pesel));
 
-        if (client == null)
+        if (client != null)
         {
             throw new ClientAlreadyExists(assignClientDto.Pesel);
         }
@@ -78,6 +78,8 @@ public class TripRepository: ITripRepository
         {
             throw new ClientAlreadyRegisteredTrip(assignClientDto.Pesel);
         }
+
+        assignClientDto.IdTrip = id;
 
         await _apbd08Context.Clients.AddAsync(assignClientDto.MapToClient());
         await _apbd08Context.ClientTrips.AddAsync(assignClientDto.MapToClientTrip());

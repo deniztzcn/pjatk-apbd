@@ -24,7 +24,8 @@ public static class AssignClientMapper
             IdTrip = assignClientDto.IdTrip,
             IdClient = assignClientDto.MapToClient().IdClient,
             RegisteredAt = DateTime.Now,
-            PaymentDate = assignClientDto.PaymentDate
+            PaymentDate = assignClientDto.PaymentDate,
+            IdClientNavigation = assignClientDto.MapToClient()
         };
     }
 }

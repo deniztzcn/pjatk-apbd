@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apbd_tutorial08.Presentation.Controllers;
+[ApiController]
+[Route("api/clients")]
 
 public class ClientController: ControllerBase
 {
