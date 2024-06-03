@@ -1,0 +1,5 @@
+namespace apbd_tutorial09.Exceptions;
+
+public abstract class NotFoundException(string message) : Exception(message);
+
+public class MedicamentNotFound(int id): NotFoundException($"Medicament with id {id} not found.");
