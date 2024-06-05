@@ -14,4 +14,15 @@ public static class PrescriptionMapper
             DueDate = prescription.DueDate
         };
     }
+
+    public static Prescription RequestDtoToPrescription(this PrescriptionRequestDto dto)
+    {
+        return new Prescription
+        {
+            IdPatient = dto.Patient.IdPatient,
+            Date = dto.Date,
+            DueDate = dto.DueDate,
+            IdDoctor = dto.Doctor.IdDoctor
+        };
+    }
 }

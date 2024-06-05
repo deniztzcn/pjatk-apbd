@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace apbd_tutorial09.Models;
 
 public class PrescriptionMedicament
@@ -6,6 +8,9 @@ public class PrescriptionMedicament
     public int IdPrescription { get; set; }
     public Medicament Medicament { get; set; }
     public Prescription Prescription { get; set; }
-    public string Dose { get; set; }
-    public string Details { get; set; }
+    public int Dose { get; set; }
+    public string Details { get; set; } = string.Empty;
+    
+    [ConcurrencyCheck]
+    public byte[] RowVersion { get; set; }
 }

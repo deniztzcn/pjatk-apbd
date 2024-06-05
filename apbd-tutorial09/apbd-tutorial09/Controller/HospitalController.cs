@@ -1,24 +1,64 @@
 using apbd_tutorial09.DTOs;
+using apbd_tutorial09.Exceptions;
+using apbd_tutorial09.Services.Abstraction;
 using apbd_tutorial09.Services.Implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apbd_tutorial09.Controller;
 
 [ApiController]
-[Route("api/prescriptions")]
+[Route("api")]
 public class HospitalController: ControllerBase
 {
-    private readonly PrescriptionService _prescriptionService;
+    private readonly IHospitalService _hospitalService;
 
-    public HospitalController(PrescriptionService prescriptionService)
+    public HospitalController(IHospitalService hospitalService)
     {
-        _prescriptionService = prescriptionService;
+        _hospitalService = hospitalService;
+    }
+
+    [HttpPost("prescriptions")]
+    public async Task<IActionResult> AddPrescriptionWithPatientAsync([FromBody] PrescriptionRequestDto prescriptionRequestDto)
+    {
+        try
+        {
+            await _hospitalService.AddPrescriptionWithPatient(prescriptionRequestDto);
+        }
+        catch (DueDateEarlierThanDate ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (MedicamentNotFound ex)
+        {
+            return NotFound(new { Message = ex.Message });
+        }
+        catch (MedicamentListTooLong ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { Message = "Some error occured" });
+        }
+        
+        return Ok();
     }
     
-    [HttpPost]
-    public async Task<IActionResult> addPrescriptionWithPatient([FromBody] PrescriptionRequestDto prescriptionRequestDto)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPatientInformation(int id)
     {
-        await _prescriptionService.AddPrescriptionWithPatient(prescriptionRequestDto);
-        return Ok();
+        try
+        {
+            var result = await _hospitalService.GetPatientDetailsAsync(id);
+            return Ok(result);
+        }
+        catch (PatientNotFound ex)
+        {
+            return NotFound(new {Message = ex.Message});
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Some error occured");
+        }
     }
 }

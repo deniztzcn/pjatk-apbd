@@ -16,7 +16,7 @@ public static class PatientMapper
         };
     }
 
-    public static PatientResponseDto PatientResponseDto(this Patient patient)
+    public static PatientResponseDto PatientToResponseDto(this Patient patient)
     {
         return new PatientResponseDto
         {

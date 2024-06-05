@@ -13,4 +13,7 @@ public class Prescription
     public Doctor Doctor { get; set; }
     public ICollection<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
     
+    [ConcurrencyCheck]
+    public byte[] RowVersion { get; set; }
+    
 }
