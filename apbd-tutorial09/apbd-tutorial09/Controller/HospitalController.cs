@@ -20,45 +20,16 @@ public class HospitalController: ControllerBase
     [HttpPost("prescriptions")]
     public async Task<IActionResult> AddPrescriptionWithPatientAsync([FromBody] PrescriptionRequestDto prescriptionRequestDto)
     {
-        try
-        {
-            await _hospitalService.AddPrescriptionWithPatient(prescriptionRequestDto);
-        }
-        catch (DueDateEarlierThanDate ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
-        catch (MedicamentNotFound ex)
-        {
-            return NotFound(new { Message = ex.Message });
-        }
-        catch (MedicamentListTooLong ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, new { Message = "Some error occured" });
-        }
+        await _hospitalService.AddPrescriptionWithPatient(prescriptionRequestDto);
         
         return Ok();
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("patients/{id}")]
     public async Task<IActionResult> GetPatientInformation(int id)
     {
-        try
-        {
-            var result = await _hospitalService.GetPatientDetailsAsync(id);
-            return Ok(result);
-        }
-        catch (PatientNotFound ex)
-        {
-            return NotFound(new {Message = ex.Message});
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "Some error occured");
-        }
+        var result = await _hospitalService.GetPatientDetailsAsync(id);
+        
+        return Ok(result);
     }
 }
