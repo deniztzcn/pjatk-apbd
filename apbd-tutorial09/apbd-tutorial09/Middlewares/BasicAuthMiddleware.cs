@@ -33,11 +33,11 @@ public class BasicAuthMiddleware
                 var username = credentials[0];
                 var password = credentials[1];
 
-                // if (IsAuthorized(username, password))
-                // {
-                //     await _next(context);
-                //     return;
-                // }
+                if (IsAuthorized(username, password))
+                {
+                    await _next(context);
+                    return;
+                }
             }
         }
         context.Response.Headers["WWW-Authenticate"] = "Basic";
@@ -45,8 +45,8 @@ public class BasicAuthMiddleware
         await context.Response.WriteAsync("Unauthorized access.");
     }
 
-    // private bool IsAuthorized(string username, string password)
-    // {
-    //     
-    // }
+    private bool IsAuthorized(string username, string password)
+    {
+        return username == "admin" && password == "password";
+    }
 }
